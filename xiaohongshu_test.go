@@ -38,7 +38,11 @@ func TestApp_PackagesList(t *testing.T) {
 		EndTime:   2,
 	}
 
-	packages.PackagesList(arg)
+	list, err := packages.PackagesList(arg)
+	if err != nil {
+		return
+	}
+	t.Log(list.CurrentPage)
 }
 
 func TestBaseApp_RefundAudit(t *testing.T) {

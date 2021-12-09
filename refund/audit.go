@@ -1,5 +1,9 @@
 package refund
 
+const (
+	URL_REFUND_AUDIT = "/ark/open_api/v0/refund/audit"
+)
+
 type Audit struct {
 	ReturnsId          string        `json:"returns_id,omitempty"`
 	OperateTime        int64         `json:"operate_time,omitempty"`
