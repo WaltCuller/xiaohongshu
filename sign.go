@@ -23,7 +23,7 @@ import (
 type HeaderMap map[string]string
 
 // GatewayURL 地址
-const GatewayURL = "https://ark.xiaohongshu.com"
+const GatewayURL = "http://flssandbox.xiaohongshu.com"
 
 // SortKeyList 公共参数排序后的字段列表，签名时用到
 // https://school.xiaohongshu.com/open/quick-start/sign.html
@@ -155,7 +155,11 @@ func Sign(param HeaderMap, secret, urlStr string) string {
 	for _, k := range SortKeyList {
 		query.Add(k, param[k])
 	}
-	signStr := urlStr + "?" + query.Encode() + secret
+	queryStr := query.Encode()
+	if len(SortKeyList) == 2 {
+		queryStr = "&" + queryStr
+	}
+	signStr := urlStr + "?" + queryStr + secret
 	h := md5.New()
 	h.Write([]byte(signStr))
 	return hex.EncodeToString(h.Sum(nil))
