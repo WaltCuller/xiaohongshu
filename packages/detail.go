@@ -47,17 +47,17 @@ type DetailRsp struct {
 	FrontUrl               string      `json:"front_url" mapstructure:"front_url"`
 	BackUrl                string      `json:"back_url" mapstructure:"back_url"`
 	ItemList               []struct {
-		MerchantDiscount string `json:"merchant_discount" mapstructure:"merchant_discount"`
-		RedDiscount      string `json:"red_discount" mapstructure:"red_discount"`
-		Barcode          string `json:"barcode" mapstructure:"barcode"`
-		Skucode          string `json:"skucode" mapstructure:"skucode"`
-		ItemName         string `json:"item_name" mapstructure:"item_name"`
-		Type             string `json:"type" mapstructure:"type"`
-		Qty              int    `json:"qty" mapstructure:"qty"`
-		Price            string `json:"price" mapstructure:"price"`
-		PayPrice         string `json:"pay_price" mapstructure:"pay_price"`
-		NetWeight        int    `json:"net_weight" mapstructure:"net_weight"`
-		RegisterName     string `json:"register_name" mapstructure:"register_name"`
-		ArticleNo        string `json:"article_no" mapstructure:"article_no"`
+		MerchantDiscount string  `json:"merchant_discount" mapstructure:"merchant_discount"`
+		RedDiscount      string  `json:"red_discount" mapstructure:"red_discount"`
+		Barcode          string  `json:"barcode" mapstructure:"barcode"`
+		Skucode          string  `json:"skucode" mapstructure:"skucode"`
+		ItemName         string  `json:"item_name" mapstructure:"item_name"`
+		Type             string  `json:"type" mapstructure:"type"`
+		Qty              int     `json:"qty" mapstructure:"qty"`
+		Price            string  `json:"price" mapstructure:"price"`
+		PayPrice         string  `json:"pay_price" mapstructure:"pay_price"`
+		NetWeight        float64 `json:"net_weight" mapstructure:"net_weight"`
+		RegisterName     string  `json:"register_name" mapstructure:"register_name"`
+		ArticleNo        string  `json:"article_no" mapstructure:"article_no"`
 	} `json:"item_list" mapstructure:"item_list"`
 }
