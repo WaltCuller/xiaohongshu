@@ -11,6 +11,10 @@ const (
 	BONDED         LogisticsMode = "red_bonded"
 )
 
+func (l LogisticsMode) String() string {
+	return string(l)
+}
+
 type OrderStatus string
 
 const (

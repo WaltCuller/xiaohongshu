@@ -12,6 +12,10 @@ const (
 	UPDATED   TimeType = "updated_at"
 )
 
+func (t TimeType) String() string {
+	return string(t)
+}
+
 type List struct {
 	StartTime int64         `json:"start_time" structs:",omitempty"`
 	EndTime   int64         `json:"end_time" structs:",omitempty"`

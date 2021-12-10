@@ -15,6 +15,10 @@ const (
 	RECEIVE_9
 )
 
+func (r ReceiveAbnormalType) Uint() uint {
+	return uint(r)
+}
+
 type RefundStatus uint
 
 const (
@@ -22,6 +26,10 @@ const (
 	REFUND_2
 	REFUND_108 RefundStatus = iota + 106
 )
+
+func (r RefundStatus) Uint() uint {
+	return uint(r)
+}
 
 type Detail struct {
 }

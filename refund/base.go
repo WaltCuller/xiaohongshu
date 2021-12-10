@@ -17,6 +17,10 @@ const (
 	RETURN_9999 ReturnStatus = 9999
 )
 
+func (r ReturnStatus) Uint() uint {
+	return uint(r)
+}
+
 type ReturnSubStats uint
 
 // 售后子状态 301-待审核 302-快递已签收 304-收货异常
@@ -26,6 +30,10 @@ const (
 	_
 	SUB_304
 )
+
+func (r ReturnSubStats) Uint() uint {
+	return uint(r)
+}
 
 type ReturnType uint
 
@@ -37,9 +45,17 @@ const (
 	TYPE_3
 )
 
+func (r ReturnType) Uint() uint {
+	return uint(r)
+}
+
 type IsShipNeeded bool
 
 const (
 	SHIP_NEEDLESS = iota
 	SHIP_NEEDED
 )
+
+func (i IsShipNeeded) Bool() bool {
+	return bool(i)
+}
