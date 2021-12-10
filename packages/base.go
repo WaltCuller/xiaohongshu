@@ -18,3 +18,7 @@ const (
 	SHIPPED  OrderStatus = "shipped"
 	RECEIVED OrderStatus = "received"
 )
+
+func (o OrderStatus) String() string {
+	return string(o)
+}
