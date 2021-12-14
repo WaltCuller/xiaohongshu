@@ -1,44 +1,60 @@
 package refund
 
 const (
-	URL_REFUND_LIST = "/ark/open_api/v0/refund/list"
+	URL_REFUND_LIST    = "/ark/open_api/v0/refund/list" // 售后列表路由
+	METHOD_REFUND_LIST = "afterSale.listAfterSaleApi"
 )
 
-type List struct {
-	Status     ReturnStatus `json:"status" structs:",omitempty"`
-	ReturnType ReturnType   `json:"return_type" structs:",omitempty"`
-	ReasonID   int          `json:"reason_id" structs:",omitempty"`
-	StartTime  int64        `json:"start_time" structs:",omitempty"`
-	EndTime    int64        `json:"end_time" structs:",omitempty"`
-	Page       int          `json:"page" structs:",omitempty"`
-	PageSize   int          `json:"page_size" structs:",omitempty"`
+// TimeType startTime/endTime对应的时间类型
+type TimeType int
+
+const (
+	CREATED TimeType = iota + 1 // 创建时间
+	UPDATED                     // 更新时间
+)
+
+// ReqList 售后列表请求
+type ReqList struct {
+	Status     ReturnStatus `json:"status"`     // 售后状态 1：待审核；2:待用户寄回；3:待收货；4:完成；5:取消；6:关闭；9:拒绝；9999:删除，不传默认全部
+	PageNo     int          `json:"pageNo"`     // 返回页码 默认 1，页码从 1 开始 PS：当前采用分页返回，数量和页数会一起传，如果不传，则采用 默认值
+	PageSize   int          `json:"pageSize"`   // 返回数量，默认50最大100
+	StartTime  int64        `json:"startTime"`  // 查询时间起点
+	EndTime    int64        `json:"endTime"`    // 查询时间终点
+	TimeType   TimeType     `json:"timeType"`   // 时间类型，1：根据创建时间查询 end-start<=24h；2：根据更新时间查询 end-start<=30min
+	UseHasNext bool         `json:"useHasNext"` // 是否返回所有数据,true 不返会total 返回 hasNext = true 表示仍有数据，false 返回total
+	ReasonId   string       `json:"reasonId"`   // 编号
+	ReturnType ReturnType   `json:"returnType"` // 售后类型 不传/0:全部；1:退货退款；2:换货；3:仅退款(old) 4:仅退款(new) 理论上不会有3出现
 }
 
-type ListRsp struct {
-	TotalNumber int `json:"total_number" mapstructure:"total_number"`
-	CurrentPage int `json:"current_page" mapstructure:"current_page"`
-	TotalPage   int `json:"total_page" mapstructure:"total_page"`
-	PageSize    int `json:"page_size" mapstructure:"page_size"`
-	RefundList  []struct {
-		ReturnsId            string         `json:"returns_id" mapstructure:"returns_id"`
-		ReturnType           ReturnType     `json:"return_type" mapstructure:"return_type"`
-		ReasonId             int            `json:"reason_id" mapstructure:"reason_id"`
-		Reason               string         `json:"reason" mapstructure:"reason"`
-		Status               ReturnStatus   `json:"status" mapstructure:"status"`
-		SubStatus            ReturnSubStats `json:"sub_status" mapstructure:"sub_status"`
-		ReceiveAbnormalType  int            `json:"receive_abnormal_type" mapstructure:"receive_abnormal_type"`
-		PackageId            string         `json:"package_id" mapstructure:"package_id"`
-		ExchangePackageId    string         `json:"exchange_package_id" mapstructure:"exchange_package_id"`
-		OrderId              string         `json:"order_id" mapstructure:"order_id"`
-		UserId               string         `json:"user_id" mapstructure:"user_id"`
-		CreatedAt            int64          `json:"created_at" mapstructure:"created_at"`
-		UpdatedAt            int64          `json:"updated_at" mapstructure:"updated_at"`
-		ReturnExpressNo      string         `json:"return_express_no" mapstructure:"return_express_no"`
-		ReturnExpressCompany string         `json:"return_express_company" mapstructure:"return_express_company"`
-		ReturnAddress        string         `json:"return_address" mapstructure:"return_address"`
-		ShipNeeded           IsShipNeeded   `json:"ship_needed" mapstructure:"ship_needed"`
-		Refunded             bool           `json:"refunded" mapstructure:"refunded"`
-		AutoReceiveDeadline  int64          `json:"auto_receive_deadline" mapstructure:"auto_receive_deadline"`
-		UseFastRefund        bool           `json:"use_fast_refund" mapstructure:"use_fast_refund"`
-	} `json:"refund_list" mapstructure:"refund_list"`
+// RspList 售后列表返回
+type RspList struct {
+	Total               int  `json:"total"`    // 查询到的总数，useHasNext=true时为0
+	PageNo              int  `json:"pageNo"`   // 当前页数
+	PageSize            int  `json:"pageSize"` // 页大小
+	HaxNext             bool `json:"haxNext"`  // 是否有下一页
+	SimpleAfterSaleList []struct {
+		ReturnsId                string              `json:"returnsId"`                // 售后ID
+		ReturnType               string              `json:"returnType"`               // 售后类型
+		ReasonId                 string              `json:"reasonId"`                 // 售后原因ID
+		Reason                   string              `json:"reason"`                   // 售后原因
+		Status                   ReturnStatus        `json:"status"`                   // 售后状态 1:待审核 2:待用户寄回 3:待收货 4:完成 5:取消 6:关闭 9:拒绝 9999:删除
+		SubStatus                ReturnSubStats      `json:"subStatus"`                // 售后子状态 301-待审核 302-快递已签收 304-收货异常
+		ReceiveAbnormalType      ReceiveAbnormalType `json:"receiveAbnormalType"`      // 收货异常类型
+		PackageId                string              `json:"packageId"`                // 包裹ID
+		ExchangePackageId        string              `json:"exchangePackageId"`        // 换货包裹ID
+		OrderId                  string              `json:"orderId"`                  // 订单ID
+		UserId                   string              `json:"userId"`                   // 用户ID
+		CreatedTime              int64               `json:"createdTime"`              // 售后创建时间戳（毫秒）
+		ReturnExpressNo          string              `json:"returnExpressNo"`          // 售后快递单号
+		ReturnExpressCompany     string              `json:"returnExpressCompany"`     // 售后快递公司
+		ReturnAddress            string              `json:"returnAddress"`            // 售后退货地址
+		ShipNeeded               IsShipNeeded        `json:"shipNeeded"`               // 是否需要寄回 1-需要 0-不需要
+		Refunded                 bool                `json:"refunded"`                 // 是否已退款
+		RefundStatus             RefundStatus        `json:"refundStatus"`             // 退款状态 108触发退款 1退款中 3退款失败 2退款成功 401已取消 101已创建 201待审核 301审核通过 302审核不通过 402自动关闭
+		AutoReceiveDeadline      int64               `json:"autoReceiveDeadline"`      // 自动确认收货时间
+		UseFastRefund            bool                `json:"useFastRefund"`            // 是否急速退款
+		UpdateTime               int64               `json:"updateTime"`               // 售后更新时间戳（毫秒）
+		ReturnExpressCompanyCode string              `json:"returnExpressCompanyCode"` // 退货快递公司编号
+	} `json:"simpleAfterSaleList"` // 售后信息列表
+	MaxPageNo int `json:"maxPageNo"` // 最大页码数
 }

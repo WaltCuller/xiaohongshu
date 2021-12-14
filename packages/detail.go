@@ -1,63 +1,181 @@
 package packages
 
 const (
-	URL_PACKAGES_DETAIL = "/ark/open_api/v0/packages/{package_id}"
+	URL_PACKAGES_DETAIL    = "/ark/open_api/v0/packages/{package_id}" // 订单详情路由
+	METHOD_PACKAGES_DETAIL = "package.getPackageDetail"
 )
 
-type Detail struct {
+// PackageAfterSalesStatus 售后状态
+type PackageAfterSalesStatus int
+
+const (
+	NONE     PackageAfterSalesStatus = iota + 1 // 无售后
+	HANDLING                                    // 售后处理中
+	COMPLETE                                    // 售后完成（含取消）
+)
+
+// Int ...
+func (p PackageAfterSalesStatus) Int() int {
+	return int(p)
 }
 
-type DetailRsp struct {
-	PackageId   string        `json:"package_id" mapstructure:"package_id"`
-	OrderId     string        `json:"order_id" mapstructure:"order_id"`
-	Logistics   LogisticsMode `json:"logistics" mapstructure:"logistics"`
-	PackageType string        `json:"package_type" mapstructure:"package_type"`
-	PresaleInfo struct {
-		ShipStartTime int `json:"ship_start_time" mapstructure:"ship_start_time"`
-		ShipEndTime   int `json:"ship_end_time" mapstructure:"ship_end_time"`
-	} `json:"presale_info" mapstructure:"presale_info"`
-	Time                   int         `json:"time" mapstructure:"time"`
-	PayTime                int         `json:"pay_time" mapstructure:"pay_time"`
-	ConfirmTime            int         `json:"confirm_time" mapstructure:"confirm_time"`
-	CreateTime             int         `json:"create_time:" mapstructure:"create_time"`
-	ExpressCompanyCode     string      `json:"express_company_code" mapstructure:"express_company_code"`
-	ExpressCompanyName     string      `json:"express_company_name" mapstructure:"express_company_name"`
-	ExpressNo              string      `json:"express_no" mapstructure:"express_no"`
-	Status                 OrderStatus `json:"status" mapstructure:"status"`
-	ReceiverName           string      `json:"receiver_name" mapstructure:"receiver_name"`
-	ReceiverPhone          string      `json:"receiver_phone" mapstructure:"receiver_phone"`
-	ReceiverAddress        string      `json:"receiver_address" mapstructure:"receiver_address"`
-	Province               string      `json:"province" mapstructure:"province"`
-	City                   string      `json:"city" mapstructure:"city"`
-	District               string      `json:"district" mapstructure:"district"`
-	TotalNetWeight         int         `json:"total_net_weight" mapstructure:"total_net_weight"`
-	PayAmount              int         `json:"pay_amount" mapstructure:"pay_amount"`
-	IdNumber               string      `json:"id_number" mapstructure:"id_number"`
-	BuyerName              string      `json:"buyer_name" mapstructure:"buyer_name"`
-	InternationalExpressNo string      `json:"international_express_no" mapstructure:"international_express_no"`
-	DeliveryTimePreference string      `json:"delivery_time_preference" mapstructure:"delivery_time_preference"`
-	OrderDeclaredAmount    string      `json:"order_declared_amount" mapstructure:"order_declared_amount"`
-	PaintMarker            string      `json:"paint_marker" mapstructure:"paint_marker"`
-	ExpressExtend1         string      `json:"express_extend_1" mapstructure:"express_extend_1"`
-	ExpressExtend2         string      `json:"express_extend_2" mapstructure:"express_extend_2"`
-	ShippingFee            int         `json:"shipping_fee" mapstructure:"shipping_fee"`
-	UserNote               string      `json:"user_note" mapstructure:"user_note"`
-	SellerNote             string      `json:"seller_note" mapstructure:"seller_note"`
-	DeclarationCode        string      `json:"declaration_code" mapstructure:"declaration_code"`
-	FrontUrl               string      `json:"front_url" mapstructure:"front_url"`
-	BackUrl                string      `json:"back_url" mapstructure:"back_url"`
-	ItemList               []struct {
-		MerchantDiscount string  `json:"merchant_discount" mapstructure:"merchant_discount"`
-		RedDiscount      string  `json:"red_discount" mapstructure:"red_discount"`
-		Barcode          string  `json:"barcode" mapstructure:"barcode"`
-		Skucode          string  `json:"skucode" mapstructure:"skucode"`
-		ItemName         string  `json:"item_name" mapstructure:"item_name"`
-		Type             string  `json:"type" mapstructure:"type"`
-		Qty              int     `json:"qty" mapstructure:"qty"`
-		Price            string  `json:"price" mapstructure:"price"`
-		PayPrice         string  `json:"pay_price" mapstructure:"pay_price"`
-		NetWeight        float64 `json:"net_weight" mapstructure:"net_weight"`
-		RegisterName     string  `json:"register_name" mapstructure:"register_name"`
-		ArticleNo        string  `json:"article_no" mapstructure:"article_no"`
-	} `json:"item_list" mapstructure:"item_list"`
+// CancelStatus 申请取消状态
+type CancelStatus int
+
+const (
+	CANCEL_0 CancelStatus = iota // 未申请取消
+	CANCEL_1                     // 取消处理中
+)
+
+// Int ...
+func (c CancelStatus) Int() int {
+	return int(c)
+}
+
+// SellerRemarkFlag 商家标记优先级
+type SellerRemarkFlag int
+
+const (
+	GRAY   SellerRemarkFlag = iota + 1 // 灰
+	RED                                // 红
+	YELLOW                             // 黄
+	GREEN                              // 绿
+	BLUE                               // 蓝
+	P                                  // 紫
+)
+
+// Int ...
+func (s SellerRemarkFlag) Int() int {
+	return int(s)
+}
+
+// IsGift 是否是赠品
+type IsGift bool
+
+const (
+	GIFT_TRUE  IsGift = true  // 赠品
+	GIFT_FALSE        = false // 非赠品
+)
+
+// Bool ...
+func (i IsGift) Bool() bool {
+	return bool(i)
+}
+
+// IsChannel 是否是渠道商品
+type IsChannel bool
+
+const (
+	CHANNEL_TRUE  IsChannel = true  // 渠道商品
+	CHANNEL_FALSE           = false // 非渠道商品
+)
+
+// Bool ...
+func (i IsChannel) Bool() bool {
+	return bool(i)
+}
+
+// ReqDetail 订单详情请求
+type ReqDetail struct {
+	PackageId string `json:"packageId"` // 包裹号
+}
+
+// RspDetail 订单详情返回
+type RspDetail struct {
+	PackageId                string                  `json:"packageId"`                // 包裹号
+	OrderId                  string                  `json:"orderId"`                  // 母单号
+	PackageType              PackageType             `json:"packageType"`              // 包裹类型，1普通 2定金预售 3全款预售 4延迟发货 5换货补发
+	PackageStatus            PackageStatus           `json:"packageStatus"`            // 包裹状态，1已下单待付款 2已支付处理中 3清关中 4待发货 5部分发货 6待收货 7已完成 8已关闭 9已取消 10换货申请中
+	PackageAfterSalesStatus  PackageAfterSalesStatus `json:"packageAfterSalesStatus"`  // 售后状态，1无售后 2售后处理中 3售后完成(含取消)
+	CancelStatus             CancelStatus            `json:"cancelStatus"`             // 申请取消状态，0未申请取消 1取消处理中
+	CreatedTime              int64                   `json:"createdTime"`              // 创建时间 单位ms
+	PaidTime                 int64                   `json:"paidTime"`                 // 支付时间 单位ms
+	UpdateTime               int64                   `json:"updateTime"`               // 更新时间 单位ms
+	DeliveryTime             int64                   `json:"deliveryTime"`             // 包裹发货时间 单位ms
+	CancelTime               int64                   `json:"cancelTime"`               // 包裹取消时间 单位ms
+	FinishTime               int64                   `json:"finishTime"`               // 包裹完成时间 单位ms
+	PromiseLastDeliveryTime  int64                   `json:"promiseLastDeliveryTime"`  // 承诺最晚发货时间 单位ms
+	PlanInfoId               string                  `json:"planInfoId"`               // 物流方案id
+	PlanInfoName             string                  `json:"planInfoName"`             // 物流方案名称
+	ReceiverCountryId        string                  `json:"receiverCountryId"`        // 收件人国家id
+	ReceiverCountryName      string                  `json:"receiverCountryName"`      // 目前仅 中国
+	ReceiverProvinceId       string                  `json:"receiverProvinceId"`       // 收件人省份id
+	ReceiverProvinceName     string                  `json:"receiverProvinceName"`     // 收件人省份
+	ReceiverCityId           string                  `json:"receiverCityId"`           // 收件人城市id
+	ReceiverCityName         string                  `json:"receiverCityName"`         // 收件人城市
+	ReceiverDistrictId       string                  `json:"receiverDistrictId"`       // 收件人区县id
+	ReceiverDistrictName     string                  `json:"receiverDistrictName"`     // 收件人区县名称
+	CustomerRemark           string                  `json:"customerRemark"`           // 用户备注
+	SellerRemark             string                  `json:"sellerRemark"`             // 商家标记备注
+	SellerRemarkFlag         SellerRemarkFlag        `json:"sellerRemarkFlag"`         // 商家标记优先级，ark订单列表展示旗子颜色 1灰旗 2红旗 3黄旗 4绿旗 5蓝旗 6紫旗
+	PresaleDeliveryStartTime int64                   `json:"presaleDeliveryStartTime"` // 预售最早发货时间 单位ms
+	PresaleDeliveryEndTime   int64                   `json:"presaleDeliveryEndTime"`   // 预售最晚发货时间 单位ms
+	ItemList                 []struct {
+		ItemId       string `json:"itemId"`       // 商品id
+		ItemName     string `json:"itemName"`     // 商品名称
+		Erpcode      string `json:"erpcode"`      // 商家编码(若为组合品，暂不支持组合品的商家编码，但skulist会返回子商品商家编码)
+		ItemSpec     string `json:"itemSpec"`     // 规格
+		ItemImage    string `json:"itemImage"`    // 商品图片url
+		ItemQuantity int    `json:"itemQuantity"` // 商品数量
+		SkuList      []struct {
+			ItemId                 string `json:"itemId"`                 // 单品商品Id(渠道商品为生成渠道商品的原商品单品id，组合商品为各个子商品的单品id，多包组为对应单包组商品id,商家编码同理)
+			ErpCode                string `json:"erpCode"`                // 商家编码
+			Barcode                string `json:"barcode"`                // 商品条码
+			SkuCode                string `json:"skuCode"`                // 商品编码
+			Quantity               int    `json:"quantity"`               // 购买数量
+			RegisterName           string `json:"registerName"`           // 商品备案名称
+			ItemName               string `json:"itemName"`               // 商品名
+			PricePerSku            int    `json:"pricePerSku"`            // 单个sku价格
+			TaxPerSku              int    `json:"taxPerSku"`              // 单个sku税金
+			PaidAmountPerSku       int    `json:"paidAmountPerSku"`       // 单个sku实付
+			DepositAmountPerSku    int    `json:"depositAmountPerSku"`    // 单个sku定金
+			MerchantDiscountPerSku int    `json:"merchantDiscountPerSku"` // 单个sku商家承担优惠
+			RedDiscountPerSku      int    `json:"redDiscountPerSku"`      // 单个sku平台承担优惠
+			RawPricePerSku         int    `json:"rawPricePerSku"`         // 单个sku原价
+		} `json:"skuList"` // 商品sku信息列表（可能出现相同skuCode不同价格的状况）
+		TotalPaidAmount       int       `json:"totalPaidAmount"`       // 总支付金额（考虑总件数）商品总实付
+		TotalMerchantDiscount int       `json:"totalMerchantDiscount"` // 商家承担总优惠
+		TotalRedDiscount      int       `json:"totalRedDiscount"`      // 平台承担总优惠
+		TotalTaxAmount        int       `json:"totalTaxAmount"`        // 商品税金
+		TotalNetWeight        int       `json:"totalNetWeight"`        // 商品总净重
+		ItemTag               IsGift    `json:"itemTag"`               // 是否赠品，1 赠品 0 普通商品
+		IsChannel             IsChannel `json:"isChannel"`             // 是否是渠道商品
+		Channel               string    `json:"channel"`               // -
+	} `json:"itemList"` // item列表 相同itemid聚合 金额为相同item下sku价格总和 单位 分
+	OriginalPackageId    string `json:"originalPackageId"`    // 原始关联包裹号(退换包裹的原包裹)
+	TotalNetWeightAmount int    `json:"totalNetWeightAmount"` // 订单商品总净重 单位g
+	TotalPayAmount       int    `json:"totalPayAmount"`       // 订单实付金额(包含运费) 单位分
+	TotalShippingFree    int    `json:"totalShippingFree"`    // 包裹运费 单位分
+	Unpack               bool   `json:"unpack"`               // 是否拆包 true已拆包 false未拆包
+	ExpressTrackingNo    string `json:"expressTrackingNo"`    // 快递单号
+	ExpressCompanyCode   string `json:"expressCompanyCode"`   // 快递公司编码
+	ReceiverName         string `json:"receiverName"`         // 收件人姓名 暂不返回 详情通过getReceiverInfo获取
+	ReceiverPhone        string `json:"receiverPhone"`        // 收件人手机 暂不返回 详情通过getReceiverInfo获取
+	ReceiverAddress      string `json:"receiverAddress"`      // 收件人地址 暂不返回 详情通过getReceiverInfo获取
+	BoundExtendInfo      struct {
+		PayNo          string   `json:"payNo"`          // 交易流水号
+		PayChannel     string   `json:"payChannel"`     // 交易渠道
+		ProductValue   string   `json:"productValue"`   // 订单价值（货值，订单商品申价之和（税前价））
+		PayAmount      string   `json:"payAmount"`      // 订单支付金额（含运费）
+		TaxAmount      string   `json:"taxAmount"`      // 订单税金
+		ShippingFee    string   `json:"shippingFee"`    // 运费 含运费税
+		DiscountAmount string   `json:"discountAmount"` // 订单优惠
+		ZoneCodes      []string `json:"zoneCodes"`      // 海关三级地址区域编码
+	} `json:"boundExtendInfo"` // 三方保税节点 金额单位 分
+	TransferExtendInfo struct {
+		InternationalExpressNo string `json:"internationalExpressNo"` // 国际快递单号
+		OrderDeclaredAmount    string `json:"orderDeclaredAmount"`    // 订单申报金额
+		PaintMarker            string `json:"paintMarker"`            // 大头笔
+		CollectionPlace        string `json:"collectionPlace"`        // 集包地
+		ThreeSegmentCode       string `json:"threeSegmentCode"`       // 三段码
+	} `json:"transferExtendInfo"` // 小包转运节点
+	OpenAddressId             string `json:"openAddressId"` // 收件人姓名+手机+地址等计算得出，用来查询收件人详情
+	SimpleDeliveryPackageList []struct {
+		DeliveryPackageIndex string        `json:"deliveryPackageIndex"` // 发货包裹索引标识 修改快递单号会使用
+		Status               PackageStatus `json:"status"`               // 发货包裹状态,1:已下单待付款 2:已支付处理中 3:清关中 4:待发货 6:待收货 7:已完成 8:已关闭 9:已取消 10:换货申请中
+		ExpressTrackingNo    string        `json:"expressTrackingNo"`    // 拆包快递单号
+		ExpressCompanyCode   string        `json:"expressCompanyCode"`   // 快递公司代码
+		ItemIdList           []string      `json:"itemIdList"`           // 此发货包裹中有哪些商品，status=4待发货时，列表中的item可以拆包发货。status=6时，列表中的item共享相同的快递公司和单号，修改时一起修改
+	} `json:"simpleDeliveryPackageList"` // 拆包信息节点
+	Logistics LogisticsMode `json:"logistics"` // 物流模式red_express三方备货直邮(备货海外仓),red_domestic_trade(三方备货内贸),red_standard(三方备货保税仓),red_auto(三方自主发货),red_box(三方小包),red_bonded(三方保税)
 }

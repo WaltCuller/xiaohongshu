@@ -1,3 +1,5 @@
 # packages
 订单类接口
-[即时订单列表](https://school.xiaohongshu.com/open/package/latest-packages.html)
+[订单列表](https://open.xiaohongshu.com/document/api?apiNavigationId=3&id=2&gatewayId=103&gatewayVersionId=1661&apiId=5738)
+[订单详情](https://open.xiaohongshu.com/document/api?apiNavigationId=3&id=3&gatewayId=103&gatewayVersionId=1661&apiId=5739)
+

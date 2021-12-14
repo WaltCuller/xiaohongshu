@@ -6,12 +6,16 @@ import (
 )
 
 type Packages interface {
-	PackagesList(arg packages.List) (packages.ListRsp, error)
-	PackagesDetail(packageID string) (packages.DetailRsp, error)
+	PackagesList(arg packages.ReqList) (packages.RspList, error)
+	PackagesDetail(arg packages.ReqDetail) (packages.RspDetail, error)
 }
 
 type Refund interface {
-	RefundList(arg refund.List) (refund.ListRsp, error)
-	RefundDetail(returnsID string) (refund.DetailRsp, error)
-	RefundAudit(arg refund.Audit)
+	RefundList(arg refund.ReqList) (refund.RspList, error)
+	RefundDetail(arg refund.ReqDetail) (refund.RspDetail, error)
+}
+
+type Oauth interface {
+	GetAccessToken()
+	RefreshToken()
 }

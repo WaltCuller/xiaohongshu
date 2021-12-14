@@ -9,7 +9,7 @@ import (
 var app *BaseApp
 
 func TestMain(m *testing.M) {
-	app = NewBaseApp("6888235097809946125", "2c4a1fa3-d4f0-4f47-ab57-1e44d4237e07")
+	app = NewBaseApp("e2a4574fcb", "3c586efc292a6bc49b14f30f7ba8dec5")
 	m.Run()
 }
 

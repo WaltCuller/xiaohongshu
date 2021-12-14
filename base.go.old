@@ -20,7 +20,7 @@ import (
 type HeaderMap map[string]string
 
 // GatewayURL 地址
-const GatewayURL = "http://flssandbox.xiaohongshu.com"
+const GatewayURL = "https://ark.xiaohongshu.com"
 
 // SortKeyList 公共参数排序后的字段列表，签名时用到
 // https://school.xiaohongshu.com/open/quick-start/sign.html

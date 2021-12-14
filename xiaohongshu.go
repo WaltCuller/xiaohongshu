@@ -3,34 +3,36 @@ package xiaohongshu
 import (
 	"github.com/WaltCuller/xiaohongshu/packages"
 	"github.com/WaltCuller/xiaohongshu/refund"
-	"strings"
 )
 
-func (a *BaseApp) PackagesList(arg packages.List) (rsp packages.ListRsp, err error) {
-	err = a.Get(packages.URL_PACKAGES_LIST, arg, &rsp)
+type App struct {
+	base                  *BaseApp
+	AccessToken           string `mapstructure:"access_token"`
+	ExpiresAt             uint32 `mapstructure:"expires_at"`
+	RefreshToken          string `mapstructure:"refresh_token"`
+	RefreshTokenExpiresAt uint32 `mapstructure:"refresh_token_expires_at"`
+	Code                  string `mapstructure:"code"`
+	SellerID              uint64 `mapstructure:"seller_id"`
+	SellerName            string `mapstructure:"seller_name"`
+	Error                 error  `mapstructure:"-"`
+}
+
+func (a *App) PackagesList(arg packages.ReqList) (rsp packages.RspList, err error) {
+	err = a.base.NewRequest(packages.METHOD_PACKAGES_LIST, arg, &rsp)
 	return
 }
 
-func (a *BaseApp) PackagesDetail(packageID string) (rsp packages.DetailRsp, err error) {
-	urlPackagesDetail := strings.Replace(packages.URL_PACKAGES_DETAIL, "{package_id}", packageID, 1)
-	err = a.Get(urlPackagesDetail, nil, &rsp)
+func (a *App) PackagesDetail(arg packages.ReqDetail) (rsp packages.RspDetail, err error) {
+	err = a.base.NewRequest(packages.METHOD_PACKAGES_DETAIL, arg, &rsp)
 	return
 }
 
-func (a *BaseApp) RefundAudit(arg refund.Audit) {
-	err := a.Post(refund.URL_REFUND_AUDIT, arg, nil)
-	if err != nil {
-		return
-	}
-}
-
-func (a *BaseApp) RefundList(arg refund.List) (rsp refund.ListRsp, err error) {
-	err = a.Get(refund.URL_REFUND_LIST, arg, &rsp)
+func (a *App) RefundList(arg refund.ReqList) (rsp refund.RspList, err error) {
+	err = a.base.NewRequest(refund.METHOD_REFUND_LIST, arg, &rsp)
 	return
 }
 
-func (a *BaseApp) RefundDetail(returnsID string) (rsp refund.DetailRsp, err error) {
-	urlRefundDetail := strings.Replace(refund.URL_REFUND_DETAIL, "{returns_id", returnsID, 1)
-	err = a.Get(urlRefundDetail, nil, &rsp)
+func (a *App) RefundDetail(arg refund.ReqDetail) (rsp refund.RspDetail, err error) {
+	err = a.base.NewRequest(refund.METHOD_REFUND_DETAIL, arg, &rsp)
 	return
 }

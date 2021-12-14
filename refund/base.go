@@ -1,61 +1,67 @@
 package refund
 
+// ReturnStatus 售后状态
 type ReturnStatus uint
 
-// 售后状态 不传/0:全部 1:待审核 2:待用户寄回 3:待收货 4:完成 5:取消 6:关闭 9:拒绝 9999:删除
 const (
-	RETURN_NONE ReturnStatus = iota
-	RETURN_1
-	RETURN_2
-	RETURN_3
-	RETURN_4
-	RETURN_5
-	RETURN_6
+	RETURN_NONE ReturnStatus = iota // 不传默认，全部
+	RETURN_1                        // 待审核
+	RETURN_2                        // 待用户寄回
+	RETURN_3                        // 待收货
+	RETURN_4                        // 完成
+	RETURN_5                        // 取消
+	RETURN_6                        // 关闭
 	_
 	_
-	RETURN_9
-	RETURN_9999 ReturnStatus = 9999
+	RETURN_9                        // 拒绝
+	RETURN_9999 ReturnStatus = 9999 // 删除
 )
 
+// Uint ...
 func (r ReturnStatus) Uint() uint {
 	return uint(r)
 }
 
+// ReturnSubStats 售后子状态
 type ReturnSubStats uint
 
-// 售后子状态 301-待审核 302-快递已签收 304-收货异常
 const (
-	SUB_301 ReturnSubStats = iota + 301
-	SUB_302
+	SUB_301 ReturnSubStats = iota + 301 // 待审核
+	SUB_302                             // 快递已签收
 	_
-	SUB_304
+	SUB_304 // 收获异常
 )
 
+// Uint ...
 func (r ReturnSubStats) Uint() uint {
 	return uint(r)
 }
 
+// ReturnType 售后类型
 type ReturnType uint
 
-// 售后类型 不传/0:全部 1:退货退款 2:换货 3:仅退款
 const (
-	TYPE_NONE ReturnType = iota
-	TYPE_1
-	TYPE_2
-	TYPE_3
+	TYPE_NONE ReturnType = iota // 不传/0:全部
+	TYPE_1                      // 退货退款
+	TYPE_2                      // 换货
+	TYPE_3                      // 仅退款（old
+	TYPE_4                      // 仅退款（new
 )
 
+// Uint ...
 func (r ReturnType) Uint() uint {
 	return uint(r)
 }
 
+// IsShipNeeded 是否寄回
 type IsShipNeeded bool
 
 const (
-	SHIP_NEEDLESS = iota
-	SHIP_NEEDED
+	SHIP_NEEDLESS = iota // 无需寄回
+	SHIP_NEEDED          // 需寄回
 )
 
+// Bool ...
 func (i IsShipNeeded) Bool() bool {
 	return bool(i)
 }

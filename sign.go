@@ -3,24 +3,34 @@ package xiaohongshu
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"net/url"
+	"fmt"
 	"sort"
+	"strings"
 )
 
-// Sign 参数签名
-func Sign(param HeaderMap, secret, urlStr string) string {
-	query := url.Values{}
-
-	sort.Strings(SortKeyList)
-
+func Sign(pm ParamMap, secret string) string {
+	paramJSON := pm["param_json"].(ParamMap)
+	if len(paramJSON) == 0 {
+		pm["param_json"] = "{}"
+	} else {
+		var ks []string
+		for k := range paramJSON {
+			ks = append(ks, k)
+		}
+		sort.Strings(ks)
+		for i, k := range ks {
+			ks[i] = fmt.Sprintf(`"%v":"%v"`, k, paramJSON[k])
+		}
+		pm["param_json"] = "{" + strings.Join(ks, ",") + "}"
+	}
+	signStr := ""
 	for _, k := range SortKeyList {
-		query.Add(k, param[k])
+		if len(pm[k].(string)) == 0 {
+			continue
+		}
+		signStr += fmt.Sprintf("%v%v", k, pm[k])
 	}
-	queryStr := query.Encode()
-	if len(SortKeyList) == 2 {
-		queryStr = "&" + queryStr
-	}
-	signStr := urlStr + "?" + queryStr + secret
+	signStr = ReplaceSpecial(secret + signStr + secret)
 	h := md5.New()
 	h.Write([]byte(signStr))
 	return hex.EncodeToString(h.Sum(nil))
