@@ -46,7 +46,7 @@ func (r RefundStatus) Uint() uint {
 
 // ReqDetail 售后详情请求
 type ReqDetail struct {
-	AfterSaleId string `json:"afterSaleId"` // 售后ID
+	AfterSaleId string `json:"afterSaleId" param:"afterSaleId"` // 售后ID
 }
 
 // RspDetail 售后详情返回

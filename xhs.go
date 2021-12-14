@@ -37,19 +37,17 @@ type BaseApp struct {
 }
 
 // NewBaseApp 实例化基础应用
-func NewBaseApp(k, s string) *BaseApp {
-	return &BaseApp{AppID: k, Secret: s, gatewayURL: GatewayURL}
+func NewBaseApp(id, s string) *BaseApp {
+	return &BaseApp{AppID: id, Secret: s, gatewayURL: GatewayURL}
 }
 
-// SetGatewayURL 重置抖音小店网关地址
+// SetGatewayURL 设置小红书网关地址
 func (b *BaseApp) SetGatewayURL(u string) *BaseApp {
 	b.gatewayURL = u
 	return b
 }
 
 // NewAccessToken 获权AccessToken
-// NewApp和NewAccessToken不是同一个对象的实例 该方法将创建新的app
-// https://op.jinritemai.com/docs/guide-docs/9/21
 func (b *BaseApp) NewAccessToken(t ...string) (*App, error) {
 	app := App{}
 	if len(t) == 0 {
@@ -78,8 +76,6 @@ func (b *BaseApp) NewAccessToken(t ...string) (*App, error) {
 }
 
 // NewAccessTokenMust 获权AccessToken
-// 同NewAccessToken，只不过error信息存储至对象内的Error属性
-// https://op.jinritemai.com/docs/guide-docs/9/21
 func (b *BaseApp) NewAccessTokenMust(t ...string) *App {
 	app, err := b.NewAccessToken(t...)
 	if err != nil {
@@ -138,7 +134,7 @@ func ToParamMap(data interface{}, ret ...*ParamMap) ParamMap {
 		fs := f.Type.String() // 字段类型 字符串
 		ff := reflect.ValueOf(f)
 		// tag 结构体后的标记 n标记名称 o标记参数
-		tag := f.Tag.Get("paramName")
+		tag := f.Tag.Get("param")
 		if tag == "-" {
 			continue
 		}
