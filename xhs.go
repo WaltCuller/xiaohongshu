@@ -224,6 +224,8 @@ func (b *BaseApp) NewRequest(method string, postData interface{}, d interface{})
 		"version":      "2.0",
 		"sign":         "",
 	}
+	params["sign"] = Sign(params, b.Secret)
+
 	if postData != nil {
 		if values, ok := postData.(ParamMap); ok {
 			if len(values) > 0 {
@@ -235,8 +237,6 @@ func (b *BaseApp) NewRequest(method string, postData interface{}, d interface{})
 			params = ToParamMap(postData, &params)
 		}
 	}
-
-	params["sign"] = Sign(params, b.Secret)
 
 	body, err := json.Marshal(params)
 	if err != nil {
