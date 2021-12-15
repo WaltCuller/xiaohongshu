@@ -258,7 +258,7 @@ func (b *BaseApp) NewRequest(method string, postData interface{}, d interface{})
 		return err
 	}
 	if ret.ErrorCode != 0 || !ret.Success {
-		return fmt.Errorf("response error %d %s", ret.ErrorCode)
+		return fmt.Errorf("response error %d", ret.ErrorCode)
 	}
 	if d == nil {
 		return nil
