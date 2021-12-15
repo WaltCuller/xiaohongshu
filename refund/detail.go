@@ -62,7 +62,7 @@ type RspDetail struct {
 	ExchangePackageId    string              `json:"exchangePackageId" mapstructure:"exchangePackageId"`       // 换货包裹id
 	OrderId              string              `json:"orderId" mapstructure:"orderId"`                           // 订单id
 	UserId               string              `json:"userId" mapstructure:"userId"`                             // 用户id
-	CreatedAt            int                 `json:"createdAt" mapstructure:"createdAt"`                       // 创建时间
+	CreatedAt            int64               `json:"createdAt" mapstructure:"createdAt"`                       // 创建时间
 	ReturnExpressNo      string              `json:"returnExpressNo" mapstructure:"returnExpressNo"`           // 售后包裹快递单号
 	ReturnExpressCompany string              `json:"returnExpressCompany" mapstructure:"returnExpressCompany"` // 售后包裹快递公司
 	ReturnAddress        string              `json:"returnAddress" mapstructure:"returnAddress"`               // 售后寄回地址
@@ -74,9 +74,9 @@ type RspDetail struct {
 	ProofPhotos          []string            `json:"proofPhotos" mapstructure:"proofPhotos"`                   // 照片凭证
 	Desc                 string              `json:"desc" mapstructure:"desc"`                                 // 描述
 	Note                 string              `json:"note" mapstructure:"note"`                                 // 备注
-	RefundTime           int                 `json:"refundTime" mapstructure:"refundTime"`                     // 退款时间
-	FillExpressTime      int                 `json:"fillExpressTime" mapstructure:"fillExpressTime"`           // 填写退货快递单时间
-	ExpressSignTime      int                 `json:"expressSignTime" mapstructure:"expressSignTime"`           // 退货快递签收时间
+	RefundTime           int64               `json:"refundTime" mapstructure:"refundTime"`                     // 退款时间
+	FillExpressTime      int64               `json:"fillExpressTime" mapstructure:"fillExpressTime"`           // 填写退货快递单时间
+	ExpressSignTime      int64               `json:"expressSignTime" mapstructure:"expressSignTime"`           // 退货快递签收时间
 	Items                []struct {
 		ItemId            string `json:"itemId" mapstructure:"itemId"`                       // 商品id
 		ItemName          string `json:"itemName" mapstructure:"itemName"`                   // 商品名称
@@ -99,6 +99,6 @@ type RspDetail struct {
 	ReturnExpressRefundable  bool   `json:"returnExpressRefundable" mapstructure:"returnExpressRefundable"`   // 退货运费是否可退
 	ReturnExpressRefunded    string `json:"returnExpressRefunded" mapstructure:"returnExpressRefunded"`       // 退货运费是否已退
 	ExpectRefundFee          int    `json:"expectRefundFee" mapstructure:"expectRefundFee"`                   // 期望退款金额，单位元，目前是售后单包含的商品总金额
-	UpdatedAt                int    `json:"updatedAt" mapstructure:"updatedAt"`                               // 更新时间
+	UpdatedAt                int64  `json:"updatedAt" mapstructure:"updatedAt"`                               // 更新时间
 	ReturnExpressCompanyCode string `json:"returnExpressCompanyCode" mapstructure:"returnExpressCompanyCode"` // 退货快递公司编号
 }
