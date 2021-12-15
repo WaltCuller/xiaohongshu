@@ -137,7 +137,7 @@ type RspDetail struct {
 		TotalMerchantDiscount int       `json:"totalMerchantDiscount" mapstructure:"totalMerchantDiscount"` // 商家承担总优惠
 		TotalRedDiscount      int       `json:"totalRedDiscount" mapstructure:"totalRedDiscount"`           // 平台承担总优惠
 		TotalTaxAmount        int       `json:"totalTaxAmount" mapstructure:"totalTaxAmount"`               // 商品税金
-		TotalNetWeight        int       `json:"totalNetWeight" mapstructure:"totalNetWeight"`               // 商品总净重
+		TotalNetWeight        float32   `json:"totalNetWeight" mapstructure:"totalNetWeight"`               // 商品总净重
 		ItemTag               IsGift    `json:"itemTag" mapstructure:"itemTag"`                             // 是否赠品，1 赠品 0 普通商品
 		IsChannel             IsChannel `json:"isChannel" mapstructure:"isChannel"`                         // 是否是渠道商品
 		Channel               string    `json:"channel" mapstructure:"channel"`                             // -
