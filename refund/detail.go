@@ -69,8 +69,8 @@ type RspDetail struct {
 	ShipNeeded           IsShipNeeded        `json:"shipNeeded" mapstructure:"shipNeeded"`                     // 是否需要寄回 0-否 1-是 -1-全部
 	Refunded             bool                `json:"refunded" mapstructure:"refunded"`                         // 是否已退款
 	RefundStatus         RefundStatus        `json:"refundStatus" mapstructure:"refundStatus"`                 // 退款状态，0：暂未触发退款；108 触发退款；1 退款中；2 退款成功；3 退款失败；101 转帐超时；401 已取消；201 待审核；301 审核通过；302 审核不通过；402 自动关闭
-	AutoReceiveDeadline  int                 `json:"autoReceiveDeadline" mapstructure:"autoReceiveDeadline"`   // 超时自动确认收货的时间
-	UseFastRefund        string              `json:"useFastRefund" mapstructure:"useFastRefund"`               // 是否急速退款
+	AutoReceiveDeadline  int64               `json:"autoReceiveDeadline" mapstructure:"autoReceiveDeadline"`   // 超时自动确认收货的时间
+	UseFastRefund        bool                `json:"useFastRefund" mapstructure:"useFastRefund"`               // 是否急速退款
 	ProofPhotos          []string            `json:"proofPhotos" mapstructure:"proofPhotos"`                   // 照片凭证
 	Desc                 string              `json:"desc" mapstructure:"desc"`                                 // 描述
 	Note                 string              `json:"note" mapstructure:"note"`                                 // 备注
@@ -97,7 +97,7 @@ type RspDetail struct {
 	} `json:"items" mapstructure:"items"` // 售后商品
 	RefundFee                int    `json:"refundFee" mapstructure:"refundFee"`                               // 退款金额，单位元
 	ReturnExpressRefundable  bool   `json:"returnExpressRefundable" mapstructure:"returnExpressRefundable"`   // 退货运费是否可退
-	ReturnExpressRefunded    string `json:"returnExpressRefunded" mapstructure:"returnExpressRefunded"`       // 退货运费是否已退
+	ReturnExpressRefunded    bool   `json:"returnExpressRefunded" mapstructure:"returnExpressRefunded"`       // 退货运费是否已退
 	ExpectRefundFee          int    `json:"expectRefundFee" mapstructure:"expectRefundFee"`                   // 期望退款金额，单位元，目前是售后单包含的商品总金额
 	UpdatedAt                int64  `json:"updatedAt" mapstructure:"updatedAt"`                               // 更新时间
 	ReturnExpressCompanyCode string `json:"returnExpressCompanyCode" mapstructure:"returnExpressCompanyCode"` // 退货快递公司编号
