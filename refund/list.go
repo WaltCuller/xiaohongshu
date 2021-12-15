@@ -34,8 +34,8 @@ type RspList struct {
 	HaxNext             bool `json:"haxNext" mapstructure:"haxNext"`   // 是否有下一页
 	SimpleAfterSaleList []struct {
 		ReturnsId                string              `json:"returnsId" mapstructure:"returnsId"`                               // 售后ID
-		ReturnType               string              `json:"returnType" mapstructure:"returnType"`                             // 售后类型
-		ReasonId                 string              `json:"reasonId" mapstructure:"reasonId"`                                 // 售后原因ID
+		ReturnType               int                 `json:"returnType" mapstructure:"returnType"`                             // 售后类型
+		ReasonId                 int                 `json:"reasonId" mapstructure:"reasonId"`                                 // 售后原因ID
 		Reason                   string              `json:"reason" mapstructure:"reason"`                                     // 售后原因
 		Status                   ReturnStatus        `json:"status" mapstructure:"status"`                                     // 售后状态 1:待审核 2:待用户寄回 3:待收货 4:完成 5:取消 6:关闭 9:拒绝 9999:删除
 		SubStatus                ReturnSubStats      `json:"subStatus" mapstructure:"subStatus"`                               // 售后子状态 301-待审核 302-快递已签收 304-收货异常
