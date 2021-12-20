@@ -8,6 +8,7 @@ import (
 type Packages interface {
 	PackagesList(arg packages.ReqList) (packages.RspList, error)
 	PackagesDetail(arg packages.ReqDetail) (packages.RspDetail, error)
+	PackagesCancelList(arg packages.ReqCancelList) (packages.RspCancelList, error)
 }
 
 type Refund interface {

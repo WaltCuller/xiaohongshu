@@ -27,6 +27,11 @@ func (a *App) PackagesDetail(arg packages.ReqDetail) (rsp packages.RspDetail, er
 	return
 }
 
+func (a *App) PackagesCancelList(arg packages.ReqCancelList) (rsp packages.RspCancelList, err error) {
+	err = a.base.NewRequest(packages.METHOD_CANCEL_APPLY_LIST, arg, &rsp)
+	return
+}
+
 func (a *App) RefundList(arg refund.ReqList) (rsp refund.RspList, err error) {
 	err = a.base.NewRequest(refund.METHOD_REFUND_LIST, arg, &rsp)
 	return
